@@ -1,0 +1,7 @@
+.venv/
+assets/jonathan-raw.png
+assets/jonathan-cut.png
+*.swp
+.vercel
+
+.DS_Store
