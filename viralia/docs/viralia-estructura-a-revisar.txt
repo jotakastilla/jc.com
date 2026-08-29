@@ -1,0 +1,143 @@
+VIRALIA · LIBRO DE ESTILO OPERATIVO
+
+Este documento describe el orden obligatorio del audio. El generador manual y
+el cron lo cargan antes de preparar un episodio.
+
+1. CABECERA
+
+Lo primero que suena es siempre el archivo «Entrada Viralia», guardado en
+Viralia Assets. Es la cabecera musical del programa y se reproduce completo,
+con la duración que tenga. No se recorta ni se sustituye por una cama musical.
+
+2. ENTRADA DEL BOLETÍN
+
+Al terminar la cabecera entra una base alegre, distinta de la cabecera y
+elegida para abrir el programa. Sobre esa base, la voz femenina principal dice:
+
+«[Buenos días / Buenas tardes / Buenas noches]. Esto es Viralia. Vamos con las
+noticias y las conversaciones que están moviendo internet ahora mismo.»
+
+La voz entra enseguida sobre la base: no debe haber un tramo largo de música
+vacía. La música acompaña a un nivel inferior a la locución.
+
+3. NOTICIA PRINCIPAL
+
+La primera noticia es el hecho más importante del momento, en España o en el
+mundo. Debe abrir el episodio si domina la conversación pública y las redes:
+por ejemplo, una gran emergencia, un suceso internacional, una noticia de
+primer orden o un acontecimiento cuyos vídeos y reacciones están por todas
+partes.
+
+El bloque explica qué ha ocurrido, el contexto disponible y por qué está
+centrando la conversación. Si Viralia Radar dispone de un corte pertinente y
+utilizable —por ejemplo, audio ambiente o un testimonio verificado de un vídeo
+viral— puede incorporarse de forma breve para aportar realidad al relato.
+
+CORTES DE VIRALIA RADAR
+
+El corte no es obligatorio. Se usa solo cuando añade una información o una
+sensación real que las voces no consiguen por sí solas y tiene importancia
+editorial suficiente. La decisión se toma así:
+
+- Debe estar ligado de forma directa a una de las noticias elegidas, no ser un
+  sonido llamativo sin contexto.
+- Debe ayudar a entender el hecho: ambiente de una emergencia, una declaración
+  relevante, una reacción que resume la conversación o un momento noticioso
+  reconocible.
+- Debe proceder de un material revisado y poder presentarse con precisión. No
+  se usan audios ambiguos, descontextualizados ni cuyo origen no esté claro.
+- Tiene prioridad para abrir cuando pertenece a la noticia principal y hace
+  sentir de inmediato qué está ocurriendo. Por ejemplo: tres o cuatro segundos
+  del sonido de una riada, seguidos de «Es el sonido del agua bajando por la
+  ladera…», antes de explicar la devastación y el contexto.
+- También puede ser una frase breve de una declaración: «“Chao, pescao”. Son
+  palabras de…», seguida de la explicación de por qué esa frase se ha vuelto
+  relevante.
+- Nunca se fuerza su uso porque exista un corte disponible. Si no cambia la
+  comprensión de la historia, no entra.
+
+Máximo dos cortes por episodio. Normalmente habrá uno, al comienzo, o ninguno.
+El segundo solo se incorpora si una noticia posterior lo justifica de verdad.
+Cada corte dura lo imprescindible —habitualmente tres a cuatro segundos— y el
+locutor lo recoge inmediatamente: identifica qué se oye, quién habla o qué
+está pasando, y enlaza con la noticia.
+
+4. RESTO DE NOTICIAS
+
+Cada noticia posterior sigue este ciclo:
+
+- transición breve y natural entre locutores;
+- cambio de base musical;
+- titular, explicación y contexto;
+- siguiente transición.
+
+El número de noticias se decide por la relevancia y la duración total. No se
+rellena por alcanzar una cifra: las historias deben ser distintas y aportar
+algo. Las más importantes van primero.
+
+5. CIERRE LIGERO
+
+El último asunto baja la intensidad sin perder interés: una curiosidad del día,
+tecnología, una aplicación, un gadget, cultura de internet o un dato que deje
+al oyente con ganas de comentarlo.
+
+Puede tener forma de conversación breve entre las dos voces. Ejemplo de tono:
+
+«Oye, y hablando de móviles, ¿sabías que…?»
+«No me digas.»
+
+No es una frase de relleno: debe partir de un dato real y cerrar el episodio
+con gracia y naturalidad.
+
+6. SALIDA
+
+Tras la última conversación entra la salida grabada habitual de Viralia. No se
+añaden explicaciones sobre Local Reset, reglas editoriales, fuentes ni el
+proceso de producción dentro del guion.
+
+LOCUCIÓN Y MEZCLA
+
+- Objetivo total: entre 3:30 y 4:30 minutos.
+- Dos voces naturales, con ritmo de boletín de mañana. La voz femenina
+  principal es TuDkG5WVXA7xXDOgih0z; la segunda voz es la masculina habitual.
+- La primera voz abre saludando. Cuando la segunda voz habla por primera vez,
+  también saluda brevemente antes de entrar en el diálogo.
+- El saludo se adapta a la hora real de Madrid: «Buenos días» por la mañana,
+  «Buenas tardes» por la tarde y «Buenas noches» por la noche. Nunca se deja
+  un «Buenos días» fijo en una edición publicada a otra hora.
+- Las comas marcan una pausa corta, nunca un silencio incómodo.
+- Tras un punto final, la entonación debe caer y cerrar la frase; nunca acabar
+  hacia arriba como si fuese una pregunta.
+- Los párrafos no deben introducir pausas artificiales largas.
+- La base musical está claramente por debajo de la voz y cambia en cada noticia.
+- Antes de publicar se revisan silencios, pausas de cada voz, entrada de la
+  locución, transiciones y cierre.
+
+RADAR
+
+Viralia Radar busca y prepara cortes que puedan enriquecer el boletín: vídeos
+o publicaciones con valor informativo, sonido ambiente o declaraciones.
+Solo se usan cuando encajan con la noticia y su procedencia y contenido han
+sido revisados. El corte sirve a la historia; no reemplaza la explicación de
+los locutores.
+
+CONFIGURACIÓN TÉCNICA OBLIGATORIA
+
+- El generador manual y Vercel Cron cargan este mismo archivo antes de crear
+  el guion.
+- Voz femenina principal: `TuDkG5WVXA7xXDOgih0z`. Voz masculina: la voz de
+  Viralia ya configurada. Una prueba puede sustituir temporalmente la primera
+  voz, sin alterar la configuración aprobada.
+- Todos los recursos musicales proceden exclusivamente del bucket Supabase
+  `viralia-assets`: `entrada viralia .mp3`, `salida viralia.mp3` y las bases
+  de impacto, feliz, seria y desastre. No se consulta `/Volumes`, ni se usa
+  una música local genérica como respaldo.
+- La cabecera oficial se descarga y se reproduce completa. Si Viralia Assets
+  no está disponible, se reintenta la descarga y se registra el error; nunca
+  se reemplaza por otra música.
+- Secuencia de montaje: Entrada Viralia completa → base feliz y bienvenida →
+  noticia principal → transiciones con cambio de base → cierre ligero → salida
+  grabada.
+- Antes de publicar se guardan en Supabase el MP3, el guion `.txt`, una portada
+  individual y la ficha del episodio. Los fallos de artículo, imágenes o
+  portada usan su ruta de contingencia y no bloquean el boletín.

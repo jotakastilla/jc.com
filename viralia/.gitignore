@@ -1,0 +1,13 @@
+.env.local
+.env.*.local
+.next/
+tmp/
+node_modules/
+.env*
+
+# Salidas locales y archivos de producción ya alojados en Storage.
+backups/
+output/
+assets/music/
+public/trendcast/audio/*.mp3
+!public/trendcast/audio/demo-queso.mp3
