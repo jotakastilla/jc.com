@@ -1,0 +1,7 @@
+import Link from "next/link";
+import type { Metadata } from "next";
+import { learningAreas, lessons, lessonArea } from "@/lib/content";
+
+export const metadata: Metadata = { title: "Guías gratuitas de podcast, audio y vídeo", description: "Guías prácticas para empezar un podcast, grabar audio, crear vídeo y publicar contenido.", alternates: { canonical: "/areas" } };
+
+export default function AreasPage() { return <main className="shell"><nav><Link className="brand" href="/">LOCAL RESET <i>ACADEMY</i></Link><span><Link href="/rutas">Rutas</Link><Link href="/empresas">Empresas</Link><Link href="/perfil">Mi perfil</Link></span></nav><section className="areasPage"><small>ÁREAS FORMATIVAS</small><h1>Todo lo que necesitas<br />para <b>crear mejor.</b></h1><p>Aprende el proceso completo de crear contenido profesional. El podcast es una parte importante de Local Reset, pero no el único punto de partida.</p><div className="areaGrid">{learningAreas.map((area) => { const content = lessons.filter((lesson) => lessonArea(lesson.slug) === area.slug); return <section id={area.slug} key={area.slug}><small>{area.name.toUpperCase()}</small><h2>{area.name}</h2><p>{area.description}</p>{content.length ? <ul>{content.map((lesson) => <li key={lesson.slug}><Link href={`/contenidos/${lesson.slug}`}>{lesson.title} <span>FREE →</span></Link></li>)}</ul> : <p className="comingSoon">Estamos preparando los primeros contenidos de esta área.</p>}</section>; })}</div></section></main>; }

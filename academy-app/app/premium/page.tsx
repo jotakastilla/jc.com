@@ -1,0 +1,5 @@
+import Link from "next/link";
+import type { Metadata } from "next";
+const plans = [{ name: "Mensual", price: "19 €", note: "al mes" }, { name: "Anual", price: "149 €", note: "al año · mejor valor" }];
+export const metadata: Metadata = { robots: { index: false, follow: true } };
+export default function PremiumPage(){return <main className="shell"><nav><Link className="brand" href="/">LOCAL RESET <i>ACADEMY</i></Link><Link href="/">← Volver</Link></nav><section className="pricing"><small>TODO LOCAL RESET ACADEMY</small><h1>Contenido para<br/><b>seguir creciendo.</b></h1><p>Todos los tutoriales, masterclasses, profesionales, prompts, recursos y novedades durante todo el año.</p><div className="planGrid">{plans.map(plan=><article key={plan.name}><small>{plan.name}</small><h2>{plan.price}</h2><p>{plan.note}</p><button disabled>Empezar Premium</button></article>)}</div><p className="note">El checkout se conecta cuando Stripe Test Mode y las variables de entorno estén configurados.</p></section></main>}
