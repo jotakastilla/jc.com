@@ -1,6 +1,20 @@
+<<<<<<< HEAD
+.venv/
+assets/jonathan-raw.png
+assets/jonathan-cut.png
+*.swp
 .DS_Store
+.vercel/
 node_modules/
 .next/
-.vercel/
 .env.local
 .env*.local
+=======
+.venv/
+assets/jonathan-raw.png
+assets/jonathan-cut.png
+*.swp
+.vercel
+
+.DS_Store
+>>>>>>> source/main

@@ -1,0 +1,49 @@
+{
+  "title": "La semana en que el clima se volvió infraestructura",
+  "description": "Calor, energía y tecnología: tres señales de una misma transformación.",
+  "blocks": [
+    {
+      "id": "calor",
+      "segments": [
+        {
+          "speaker": "host_a",
+          "text": "Esta semana el calor ha dejado de ser una alerta en el móvil. En la Comunitat Valenciana, el sistema MoMo del Instituto de Salud Carlos III estimó 64 muertes atribuibles a las altas temperaturas durante la primera mitad de agosto."
+        },
+        {
+          "speaker": "host_b",
+          "text": "Y 51 ocurrieron en solo una semana. La cifra no habla solo de meteorología. Habla de salud pública, de ciudades, de horarios y de cómo vivimos cuando el termómetro no baja."
+        }
+      ]
+    },
+    {
+      "id": "tecnologia",
+      "segments": [
+        {
+          "speaker": "host_a",
+          "text": "La segunda señal llega desde el CSIC. Sus investigadores han desarrollado un nanomaterial capaz de enfriar superficies hasta 12,9 grados sin gastar electricidad."
+        },
+        {
+          "speaker": "host_b",
+          "text": "Parece una historia de laboratorio, pero abre otra conversación. Fachadas, vehículos y dispositivos que necesitarían menos aire acondicionado para seguir siendo habitables."
+        }
+      ]
+    },
+    {
+      "id": "energia",
+      "segments": [
+        {
+          "speaker": "host_a",
+          "text": "Y la tercera señal viene de Alemania. SuedLink ha completado el cruce subterráneo del Elba: una gran infraestructura eléctrica para mover energía eólica al sur y solar al norte."
+        },
+        {
+          "speaker": "host_b",
+          "text": "No es una noticia espectacular, pero explica el cambio. La tecnología útil no es solo la que vemos en una pantalla. También enfría una fachada, mueve electricidad y reduce el coste de adaptarnos."
+        },
+        {
+          "speaker": "host_a",
+          "text": "Esta semana, la innovación no ha sonado a futuro. Ha sonado a infraestructura."
+        }
+      ]
+    }
+  ]
+}
