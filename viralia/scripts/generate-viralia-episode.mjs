@@ -41,11 +41,11 @@ const ffprobeBinary = process.env.VIRALIA_FFPROBE_PATH || ffprobeStatic.path || 
 const speakerA = {
   // Voz femenina aprobada. La variable permite una audición puntual distinta.
   voiceId: process.env.VIRALIA_HOST_A_VOICE_ID || "TuDkG5WVXA7xXDOgih0z",
-  label: "Host A",
+  label: "Carmen",
 };
 const speakerB = {
   voiceId: "7KOBCMWq7jGQUKV5YMuW",
-  label: "Host B",
+  label: "Dani",
 };
 
 const reactionLibrary = {
@@ -79,11 +79,25 @@ function createReactionSegment(speaker, reactionKey) {
   };
 }
 
-const outroSegments = [
-  { type: "tts", speaker: speakerA, text: "Y hasta aquí el boletín de hoy." },
-  { type: "tts", speaker: speakerB, text: "Pero en Viralia no esperamos a mañana: si pasa algo importante, volvemos y te lo contamos." },
-  { type: "tts", speaker: speakerA, text: "Nos escuchamos en cuanto haya algo que entender." },
-];
+function getMadridWeekday(date = new Date()) {
+  return new Intl.DateTimeFormat("en-GB", { weekday: "long", timeZone: "Europe/Madrid" }).format(date);
+}
+
+function buildOutroSegments(date = new Date()) {
+  const tomorrow = getMadridWeekday(new Date(date.getTime() + 24 * 60 * 60 * 1000));
+  const friday = getMadridWeekday(date) === "friday";
+  return friday
+    ? [
+        { type: "tts", speaker: speakerB, text: "Y hasta aquí Viralia por hoy." },
+        { type: "tts", speaker: speakerA, text: "El lunes volvemos a mirar qué está pasando ahí fuera y qué está pasando en internet." },
+        { type: "tts", speaker: speakerB, text: "Buen finde, Carmen." },
+        { type: "tts", speaker: speakerA, text: "Buen finde, Dani." },
+      ]
+    : [
+        { type: "tts", speaker: speakerB, text: "Y hasta aquí Viralia por hoy." },
+        { type: "tts", speaker: speakerA, text: `Mañana, ${tomorrow}, volvemos con lo que merezca la pena entender.` },
+      ];
+}
 
 function loadLocalEnvironment() {
   const envPath = path.join(projectRoot, ".env.local");
@@ -981,18 +995,16 @@ async function loadViraliaStyleGuide() {
 function validateViraliaEpisodeStyle(conversation, { mode = "daily" } = {}) {
   if (mode === "special") return;
   const blocks = Array.isArray(conversation?.blocks) ? conversation.blocks : [];
-  if (blocks.length !== 4) throw new Error("Publicación bloqueada por libro de estilo: el boletín diario debe tener cuatro bloques.");
+  if (blocks.length < 1 || blocks.length > 6) throw new Error("Publicación bloqueada por libro de estilo: el boletín diario debe tener entre uno y seis bloques editoriales.");
 
   const narration = blocks.flatMap((block) => block.segments || []).filter((segment) => segment.type === "tts");
   if (narration.length < 12 || blocks.some((block) => (block.segments || []).filter((segment) => segment.type === "tts").length < 3)) {
     throw new Error("Publicación bloqueada por libro de estilo: faltan las tres intervenciones informativas de algún bloque.");
   }
   const words = narrationWordCount(narration);
-  if (words < 500 || words > 650) {
-    throw new Error(`Publicación bloqueada por libro de estilo: el guion tiene ${words} palabras y debe tener entre 500 y 650.`);
+  if (words < 480 || words > 620) {
+    throw new Error(`Publicación bloqueada por libro de estilo: el guion tiene ${words} palabras y debe tener entre 480 y 620.`);
   }
-  const tones = new Set(blocks.map((block) => block.tone));
-  if (tones.size !== 4) throw new Error("Publicación bloqueada por libro de estilo: cada noticia necesita una base musical distinta.");
 
   const text = narration.map((segment) => segment.text).join(" ").toLocaleLowerCase("es-ES");
   const bannedPhrases = ["añadir o excluir", "podemos fiar", "podemos confiar", "las conclusiones", "reglas editoriales"];
@@ -1009,8 +1021,8 @@ function buildConversationSystemPromptEs(styleGuide = "") {
     "Construye un boletín con jerarquía editorial: abre con una historia principal desarrollada y después incorpora solo las pocas historias aprobadas que completan el pulso del día.",
     "La referencia es el ritmo claro y cercano de un magazine informativo de mañana, sin imitar ni reproducir la voz o fórmulas de ningún programa concreto.",
     "El protagonista es internet: qué sigue, qué teclea, con qué se obsesiona y qué dice eso del día.",
-    "Escribes diálogos en español de España para dos locutores: host_a (la primera voz, Maricarmen) y host_b (la segunda voz).",
-    "host_a conduce, ordena y acelera. host_b aporta una precisión, una pregunta útil o introduce el siguiente bloque. No finjáis una tertulia ni rellenéis con asentimientos.",
+    "Escribes en español de España para Carmen (host_a, voz femenina) y Dani (host_b, voz masculina). Nunca llames Maricarmen a Carmen.",
+    "No escribas una tertulia de réplica obligatoria. Cada locutor puede desarrollar una historia entera y pasar el relevo al otro. Si hay interacción, la segunda intervención debe añadir un dato, contraste o ángulo nuevo; nunca reformular lo que acaba de decir el otro.",
     "El tono debe ser oral, agil, natural, humano y con una ironia ligera.",
     "El humor debe ser sutil, ocasional y acertado. Nunca meta chistes faciles, bromas absurdas o risas porque si.",
     "Cada intervención debe aportar información nueva, contexto, una transición útil o personalidad real. Elimina asentimientos como 'así es', 'totalmente', 'desde luego' o 'qué interesante' cuando no añadan nada.",
@@ -1034,25 +1046,38 @@ function buildConversationSystemPromptEs(styleGuide = "") {
   ].join(" ");
 }
 
-function buildConversationUserPromptEs({ briefingText, duracionObjetivoSeg, tonoDominante, isSpecial = false, requiredStories = [] }) {
-  const target = Math.min(270, Math.max(240, Number(duracionObjetivoSeg) || 240));
+function buildDailySectionInstruction(date = new Date()) {
+  const sections = {
+    monday: ["LO QUE TE PERDISTE", "una sola cosa verificable del fin de semana: vídeo, meme, actuación, polémica o fenómeno que merezca recuperar"],
+    tuesday: ["¿PERO ESTO QUÉ ES?", "un hashtag, término, meme, personaje o búsqueda cuyo significado expliques: qué es, de dónde sale y por qué circula"],
+    wednesday: ["TIENES QUE VER ESTO", "una recomendación concreta de internet —vídeo, cuenta, creador, web, herramienta o IA— y la razón verificable para recomendarla hoy"],
+    thursday: ["APUNTA ESTO", "algo concreto que empieza o está a punto de ocurrir: estreno, lanzamiento, evento o tendencia emergente"],
+    friday: ["ESTE FINDE", "dos o tres planes o acontecimientos concretos con interés real y conversación, preferiblemente en España"],
+  };
+  const [name, detail] = sections[getMadridWeekday(date)] || ["CIERRE VIRALIA", "una idea concreta y verificable para cerrar"];
+  return { name, detail };
+}
+
+function buildConversationUserPromptEs({ briefingText, duracionObjetivoSeg, tonoDominante, isSpecial = false, requiredStories = [], generatedAt = new Date() }) {
+  const target = Math.min(240, Math.max(210, Number(duracionObjetivoSeg) || 240));
   const style = String(tonoDominante || "moderno, conversacional, ágil").trim();
+  const dailySection = buildDailySectionInstruction(generatedAt);
   return `
 Genera un guion conversacional para un episodio corto de podcast en España.
 
-Duración objetivo: ${target} segundos.
-Objetivo de palabras: 600 a 760 palabras. Nunca menos de 600 palabras de locución.
+Duración objetivo: ${target} segundos. El episodio completo nunca puede superar cinco minutos.
+Objetivo de palabras para este guion: 480 a 620. Es preferible acabar antes que rellenar.
 
 Formato obligatorio:
 1) Conversación entre dos voces.
-2) Entre 3 y 4 bloques claramente distintos, según las historias disponibles.
+2) Entre 3 y 6 bloques claramente distintos, según las historias realmente verificadas.
 3) Las entradas y salidas de marca ya las aporta el montaje de audio: no escribas bienvenida, despedida ni menciones a Local Reset Studios.
 4) Cada bloque debe declarar un tono: disaster, serious, impact o happy.
 
 Reglas de redacción:
 - Debe haber dos voces: host_a y host_b.
 - host_a es la primera voz y host_b la segunda voz.
-- Debe contener entre 20 y 28 intervenciones de locución, repartidas entre las dos voces.
+- Debe contener entre 14 y 24 intervenciones de locución. No alternes voces por sistema.
 - El centro del episodio es por qué internet está pendiente de eso hoy.
 - Debe sonar a morning show moderno y a conversacion real, no a resumen robotico.
 - Es el boletín para despertarse: mezcla novedades de primera hora con las historias de ayer que todavía explican de qué se habla esta mañana.
@@ -1061,19 +1086,19 @@ Reglas de redacción:
 - No metas chistes gratuitos.
 - No pongas risas como jaja, jeje o hahaha si no son imprescindibles y totalmente naturales.
 - Frases cortas y locutables.
-- Mantén intervenciones locutables de entre 16 y 30 palabras. No acortes el episodio eliminando contexto necesario.
+- Mantén intervenciones locutables de entre 18 y 55 palabras. Una voz puede resolver una historia completa cuando eso la haga más clara.
 - Las cifras de dinero se escriben siempre en palabras o como una cifra sin separadores, seguida de "euros". Nunca separes con una pausa la cantidad de "euros": debe sonar seguido, por ejemplo "quinientos mil euros".
 - No incluyas bienvenida ni despedida: el sistema las añade por separado.
-- No repitas dos veces la misma explicacion ni la misma reaccion.
+- No repitas dos veces la misma explicación, dato, titular o reacción. Después de cada intervención pregunta: ¿ha añadido un hecho, contexto, consecuencia o ángulo distinto? Si no, elimínala.
 - Cada bloque debe avanzar.
-- Antes de responder, comprueba que el guion completo tiene al menos 600 palabras de locución. No lo cierres antes de alcanzar ese mínimo.
+- No inventes una tendencia plausible. Para cada historia debes nombrar con claridad el hecho, persona, vídeo, hashtag, término, meme, producto o búsqueda concreta; explica qué es, qué ha pasado y por qué circula.
 - Usa todas las historias aprobadas del briefing y no menciones ninguna otra tendencia. Si varias señales están agrupadas, trátalas como una sola historia.
 - Debes nombrar de forma explícita cada una de estas historias aprobadas: ${requiredStories.map((story) => story.keyword).filter(Boolean).join("; ") || "las del briefing"}. No omitas ninguna.
 - Dedica contexto suficiente a cada historia; no reemplaces una noticia aprobada por una curiosidad inventada. Si hay una noticia política aprobada, debe tener su propio tramo claro, descriptivo y neutral.
 - No añadas instituciones, fuentes, cifras, antecedentes, hoteles, lugares, declaraciones o detalles que no aparezcan literalmente en el briefing. Si no se sabe la causa exacta de una tendencia, dilo con prudencia o pasa a la siguiente historia.
 - ${isSpecial ? "Desarrolla la única historia aprobada en cuatro pasos: qué ha ocurrido, qué está confirmado, por qué importa y qué conviene seguir. No rellenes con otros temas." : "Desarrolla la HISTORIA_PRINCIPAL: qué ha pasado, qué sabemos, por qué se habla de ello, por qué importa y qué queda por seguir solo si el briefing lo permite. Las demás historias pueden compartir bloque para que no suene a lista plana."}
 - La palabra o nombre buscado debe quedar claro cuando entre en escena.
-- Usa variedad verbal. Alterna entre formulas como: se dispara, entra en radar, media España está pendiente, se llena de consultas, se teclea mucho, se cuela en todas partes, se pone a circular, se vuelve obsesión.
+- Los titulares o fragmentos en otro idioma son solo evidencia: tradúcelos y no los leas literalmente. No locutes hashtags, URLs, emojis ni texto inglés salvo nombres propios inevitables; explícalos en español natural.
 - Puedes mencionar Google Trends solo como radar si de verdad ayuda, pero sin convertir el guion en una lista de fuentes.
 - Cita medios solo cuando aporten contexto real y rapido, por ejemplo ABC, MARCA o El Confidencial.
 - Si el briefing trae señales de Reddit o Hacker News, integralas como conversacion natural.
@@ -1087,6 +1112,7 @@ Reglas de redacción:
   bloque 4 opcional: HISTORIA_PARA_CONTAR solo si el briefing incluye CIERRE_LIGERO; si no, cierra de forma natural tras el último bloque relevante.
 - Cada bloque debe sentirse autocontenido y tener su propio mini arco.
 - Si nombras a una persona famosa o un tema viral, explica el hecho concreto que dispara la busqueda.
+- Sección final de hoy: «${dailySection.name}». Solo inclúyela si el briefing contiene material concreto y verificable que encaje: ${dailySection.detail}. Debe durar entre 30 y 45 segundos como máximo. Si no hay material, omítela; nunca la inventes ni fuerces una sección.
 - El cierre solo puede ser ligero si hay una historia ligera aprobada. En otro caso, debe ser natural, breve y respetuoso.
 - Tono: ${style}.
 
@@ -1444,7 +1470,7 @@ function addInternalReactionNotes(segments = []) {
   return segments;
 }
 
-export async function generateConversationScript(briefing, durationTarget = 240, { isSpecial = false, openingClip = null, requiredStories = [], attempt = 0, styleGuide = "" } = {}) {
+export async function generateConversationScript(briefing, durationTarget = 240, { isSpecial = false, openingClip = null, requiredStories = [], attempt = 0, styleGuide = "", generatedAt = new Date() } = {}) {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
     throw new Error("Falta OPENAI_API_KEY.");
@@ -1468,6 +1494,7 @@ export async function generateConversationScript(briefing, durationTarget = 240,
             tonoDominante: "moderno, ágil, conversacional, con cultura de internet",
             isSpecial,
             requiredStories,
+            generatedAt,
           }),
         },
       ],
@@ -1489,7 +1516,7 @@ export async function generateConversationScript(briefing, durationTarget = 240,
   }
 
   const modelBlocks = Array.isArray(parsed.blocks)
-    ? parsed.blocks.slice(0, 4).map((block, index) => normalizeModelBlock(block, `block_${index + 1}`))
+    ? parsed.blocks.slice(0, 6).map((block, index) => normalizeModelBlock(block, `block_${index + 1}`))
     : [];
 
   const fallbackSegments = Array.isArray(parsed.segments)
@@ -1513,23 +1540,23 @@ export async function generateConversationScript(briefing, durationTarget = 240,
   }
   const missingStories = missingRequiredStoryMentions(flattenedSegments, requiredStories);
   const wordCount = narrationWordCount(flattenedSegments);
-  const tooShort = wordCount < 600;
+  const tooShort = wordCount < 480;
   if (missingStories.length || tooShort) {
     if (attempt < 2) {
       const validationNotes = [
         missingStories.length ? `omitió estas historias aprobadas: ${missingStories.join(", ")}` : "",
-        tooShort ? `solo tiene ${wordCount} palabras; el mínimo absoluto es 600` : "",
+        tooShort ? `solo tiene ${wordCount} palabras; el mínimo absoluto es 480` : "",
       ].filter(Boolean).join(" y ");
       return generateConversationScript(
         `${briefing}\n\nVALIDACIÓN OBLIGATORIA: el borrador anterior ${validationNotes}. Corrígelo con información limitada al briefing.`,
         durationTarget,
-        { isSpecial, openingClip, requiredStories, attempt: 1, styleGuide }
+        { isSpecial, openingClip, requiredStories, attempt: attempt + 1, styleGuide, generatedAt }
       );
     }
     const completedBlocks = expandShortEditorialNarration(
       appendMissingStorySummaries(blocks, missingStories, requiredStories),
       requiredStories,
-      600
+      480
     );
     const enrichedBlocks = addProgramFraming(completedBlocks.map((block) => ({
       ...block,
@@ -1571,7 +1598,7 @@ export async function generateConversationScript(briefing, durationTarget = 240,
 async function loadPreparedConversation(filePath, openingClip = null) {
   const parsed = JSON.parse(await readFile(filePath, "utf8"));
   const blocks = (Array.isArray(parsed.blocks) ? parsed.blocks : [])
-    .slice(0, 4)
+    .slice(0, 6)
     .map((block, index) => normalizeModelBlock(block, `block_${index + 1}`));
   const framedBlocks = addProgramFraming(blocks, openingClip);
   const segments = framedBlocks.flatMap((block) => block.segments);
@@ -2048,6 +2075,7 @@ export async function generateViraliaEpisode({ mode = "daily", topTrendsOverride
         openingClip: radarOpeningClip,
         requiredStories: editorialSelection?.selected || [],
         styleGuide,
+        generatedAt,
       });
     } catch (error) {
       const reason = error instanceof Error ? error.message : "Error desconocido al generar el guion con IA.";
@@ -2104,11 +2132,11 @@ export async function generateViraliaEpisode({ mode = "daily", topTrendsOverride
   const creditsStingSource = await downloadRemoteAudioAsset(remoteAudioAssets.credits);
   const conversationBlocks = Array.isArray(conversation.blocks) ? conversation.blocks : chunkSegmentsIntoBlocks(conversation.segments);
   const blocks = conversationBlocks
-    .slice(0, 4)
+    .slice(0, 6)
     .map((block, index) => ({
       id: block.id || `block_${index + 1}`,
       bedPath: toneBedSources[block.tone] || fallbackBlockBed,
-      segments: [...(block.segments || []), ...(index === conversationBlocks.length - 1 ? outroSegments : [])],
+      segments: [...(block.segments || []), ...(index === conversationBlocks.length - 1 ? buildOutroSegments(generatedAt) : [])],
       voiceDelayMs: index === 0 ? 420 : 220,
     }));
   const openingBlock = {
@@ -2221,6 +2249,9 @@ export async function generateViraliaEpisode({ mode = "daily", topTrendsOverride
   }
 
   const duration = await getDurationSeconds(publicAudioPath);
+  if (duration > 300) {
+    throw new Error(`Publicación bloqueada: el episodio dura ${Math.round(duration)} segundos y Viralia no puede superar cinco minutos.`);
+  }
   const topKeywords = editorialSelection?.selected?.map((trend) => trend.keyword) || topTrends.map((trend) => trend.keyword);
   const primaryKeyword = process.env.VIRALIA_TOPIC_KEYWORDS || topKeywords.slice(0, 3).join(", ");
   const slug = slugify(`viralia-${timestampLabel}`);

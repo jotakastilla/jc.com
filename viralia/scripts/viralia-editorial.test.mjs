@@ -50,7 +50,7 @@ test("D: un radar de accidentes, rumores y cotilleo activa edición de guardia",
   assert.equal(result.selected.length, 0);
 });
 
-test("E: entre seis buenas elige cuatro y reserva una historia ligera para cerrar", () => {
+test("E: entre seis buenas conserva las historias interesantes y reserva una ligera para cerrar", () => {
   const result = selectEditorialStories([
     trend("Nueva IA", ["Nueva IA para usuarios", "El lanzamiento abre debate"]),
     trend("Estreno de cine", ["Un estreno sorprende", "La película genera conversación"]),
@@ -59,9 +59,9 @@ test("E: entre seis buenas elige cuatro y reserva una historia ligera para cerra
     trend("Ciencia espacial", ["Un hallazgo científico", "La misión aporta datos"]),
     trend("Nueva aplicación", ["Una app presenta funciones", "El cambio interesa a usuarios"]),
   ]);
-  assert.equal(result.selected.length, 4);
+  assert.equal(result.selected.length, 6);
   assert.equal(result.selected.at(-1).editorial_treatment, "CIERRE_LIGERO");
-  assert.equal(result.discarded.length >= 2, true);
+  assert.equal(result.discarded.length, 0);
 });
 
 test("F: agrupa términos diferentes que describen la misma historia", () => {

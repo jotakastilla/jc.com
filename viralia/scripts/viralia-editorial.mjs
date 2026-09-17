@@ -216,6 +216,13 @@ function scoreNormalCandidate(candidate, text) {
   if (/\b(guia|ayuda|aviso|precio|consumo|empleo|transporte)\b/.test(text)) { score += 5; parts.push("utilidad"); }
   if (MAJOR_AFFAIRS.test(text)) { score += 12; parts.push("relevancia pública"); }
   if ((candidate?.story_signal_count || 1) > 1) { score += 8; parts.push("señales agrupadas de la misma historia"); }
+  // Viralia no rellena secciones temáticas: prima aquello que la gente está
+  // viendo, buscando o compartiendo, siempre que haya contexto comprobable.
+  if (/\b(viral|meme|hashtag|trend|tendencia|tiktok|instagram|reels|youtube|twitch|reddit|video|vídeo|busqueda|búsqueda|se dispara|circula)\b/.test(text)) {
+    score += 16;
+    parts.push("señal de conversación digital");
+  }
+  if ((candidate?.socialSignals?.length || 0) > 0) { score += 14; parts.push("señales sociales verificadas"); }
   return { score: Math.min(score, 95), parts };
 }
 
@@ -244,20 +251,13 @@ export function selectEditorialStories(candidates = []) {
   const normalPool = classified
     .filter((item) => item.classification === "NORMAL")
     .sort((a, b) => Number(b.sensitive) - Number(a.sensitive) || b.editorial_score - a.editorial_score);
-  const representedCategories = new Set();
-  const selectionOrder = [
-    ...normalPool.filter((item) => {
-      if (representedCategories.has(item.category)) return false;
-      representedCategories.add(item.category);
-      return true;
-    }),
-    ...normalPool.filter((item) => representedCategories.has(item.category)),
-  ];
+  // No fabricamos una cuota de política, economía, cultura, etc. La escaleta
+  // se ordena por interés editorial y conversación real del día.
+  const selectionOrder = normalPool;
 
   const selected = [];
-  const usedCategories = new Set();
   for (const item of selectionOrder) {
-    if (selected.length >= 4) break;
+    if (selected.length >= 6) break;
     const duplicate = selected.some((chosen) => fold(chosen.keyword) === fold(item.keyword));
     if (duplicate) continue;
     selected.push({
@@ -269,7 +269,6 @@ export function selectEditorialStories(candidates = []) {
         ? "Abre el boletín por su relevancia cultural y requiere una exposición sobria, sin reacciones ligeras ni transición frívola."
         : `Seleccionada por ${item.score_signals.join(", ") || "interés y contexto"}; encaja con la temperatura ${item.temperature.toLowerCase()} del conjunto.`,
     });
-    usedCategories.add(item.category);
   }
 
   // Si hay una historia ligera y apta, reservamos el final solo cuando aporta
@@ -331,9 +330,9 @@ export function selectEditorialStories(candidates = []) {
     selected,
     discarded,
     special_candidate: special ? { topic: special.keyword, classification: "ESPECIAL", reason: special.reason, sources: special.sources, headlines: special.newsTitles } : null,
-    coherence_score: selected.length ? Math.min(94, 76 + selected.length * 4 + (usedCategories.size >= 3 ? 3 : 0)) : 45,
+    coherence_score: selected.length ? Math.min(94, 76 + selected.length * 3) : 45,
     coherence_reason: status === "NORMAL"
-      ? "Selección ordenada por importancia editorial: las noticias sensibles relevantes abren con sobriedad; el resto cambia de tema mediante una transición neutral."
+      ? "Selección ordenada por relevancia, conversación digital y contexto verificable, sin cuotas artificiales por categoría."
       : "Edición reducida: se publica con menos temas o con una señal de guardia, sin inventar noticias ni convertir sucesos personales en relleno.",
     candidates: classified.map(({ keyword, classification, reason, sensitive, category, temperature, editorial_score, score_signals, newsTitles, sources, relatedSearches, approxTraffic }) => ({ keyword, classification, reason, sensitive, category, temperature, editorial_score, score_signals, newsTitles, sources, relatedSearches, approxTraffic })),
   };

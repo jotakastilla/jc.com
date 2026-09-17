@@ -62,26 +62,37 @@ Cada corte dura lo imprescindible —habitualmente tres a cuatro segundos— y e
 locutor lo recoge inmediatamente: identifica qué se oye, quién habla o qué
 está pasando, y enlaza con la noticia.
 
-4. RESTO DE NOTICIAS
+4. RESTO DE HISTORIAS
 
-Cada noticia posterior sigue este ciclo:
+La escaleta se construye después de investigar qué está creciendo, buscando o
+circulando. No se rellenan categorías fijas. Puede combinar actualidad
+importante con tendencias de Google, términos de redes, vídeos, memes,
+tecnología o cultura de internet, siempre que el fenómeno se identifique y
+pueda contrastarse.
+
+Cada historia posterior sigue este ciclo:
 
 - transición breve y natural entre locutores;
 - cambio de base musical;
 - titular, explicación y contexto;
 - siguiente transición.
 
-El número de noticias se decide por la relevancia y la duración total. No se
-rellena por alcanzar una cifra: las historias deben ser distintas y aportar
+El número de historias se decide por la relevancia y la duración total:
+normalmente entre cuatro y seis, aunque puede ser menor. No se rellena por
+alcanzar una cifra: las historias deben ser distintas, concretas y aportar
 algo. Las más importantes van primero.
 
-5. CIERRE LIGERO
+5. CIERRE DEL DÍA
 
-El último asunto baja la intensidad sin perder interés: una curiosidad del día,
-tecnología, una aplicación, un gadget, cultura de internet o un dato que deje
-al oyente con ganas de comentarlo.
+Antes de la despedida puede entrar una sección breve, de treinta a cuarenta y
+cinco segundos como máximo, solo si hay material verificable: lunes «Lo que te
+perdiste»; martes «¿Pero esto qué es?»; miércoles «Tienes que ver esto»;
+jueves «Apunta esto»; viernes «Este finde». Si no existe una historia concreta
+para ella, se omite. Nunca se inventa ni se fuerza.
 
-Puede tener forma de conversación breve entre las dos voces. Ejemplo de tono:
+Puede tener forma de conversación breve entre las dos voces. La interacción no
+es obligatoria: Dani y Carmen pueden contar una historia completa y cederse el
+relevo sin repetir el titular ni reaccionar por sistema. Ejemplo de tono:
 
 «Oye, y hablando de móviles, ¿sabías que…?»
 «No me digas.»
@@ -97,8 +108,8 @@ proceso de producción dentro del guion.
 
 LOCUCIÓN Y MEZCLA
 
-- Objetivo total: entre 3:30 y 4:30 minutos.
-- Dos voces naturales, con ritmo de boletín de mañana. La voz femenina
+- Objetivo total: alrededor de cuatro minutos. Máximo absoluto: cinco minutos.
+- Dos voces naturales, Carmen y Dani, con ritmo de boletín de mañana. La voz femenina
   principal es TuDkG5WVXA7xXDOgih0z; la segunda voz es la masculina habitual.
 - La primera voz abre saludando. Cuando la segunda voz habla por primera vez,
   también saluda brevemente antes de entrar en el diálogo.
