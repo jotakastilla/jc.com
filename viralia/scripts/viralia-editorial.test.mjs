@@ -130,3 +130,11 @@ test("L: descarta cuotas y casas de apuestas", () => {
   ]);
   assert.equal(result.selected.some((item) => item.keyword === "betfair"), false);
 });
+
+test("M: descarta titulares extranjeros sin contexto español locutable", () => {
+  const result = selectEditorialStories([
+    trend("pogoda", ["Jakie zmiany pogodowe są prognozowane dla Krakowa?", "Kraków: jaka pogoda czeka nas dzisiaj?"]),
+    trend("teams", ["Does your college football roster cost $8M?", "Inside college football's portal nightmares"]),
+  ]);
+  assert.equal(result.selected.length, 0);
+});

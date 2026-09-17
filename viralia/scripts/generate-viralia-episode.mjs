@@ -1098,7 +1098,8 @@ Reglas de redacción:
 - No añadas instituciones, fuentes, cifras, antecedentes, hoteles, lugares, declaraciones o detalles que no aparezcan literalmente en el briefing. Si no se sabe la causa exacta de una tendencia, dilo con prudencia o pasa a la siguiente historia.
 - ${isSpecial ? "Desarrolla la única historia aprobada en cuatro pasos: qué ha ocurrido, qué está confirmado, por qué importa y qué conviene seguir. No rellenes con otros temas." : "Desarrolla la HISTORIA_PRINCIPAL: qué ha pasado, qué sabemos, por qué se habla de ello, por qué importa y qué queda por seguir solo si el briefing lo permite. Las demás historias pueden compartir bloque para que no suene a lista plana."}
 - La palabra o nombre buscado debe quedar claro cuando entre en escena.
-- Los titulares o fragmentos en otro idioma son solo evidencia: tradúcelos y no los leas literalmente. No locutes hashtags, URLs, emojis ni texto inglés salvo nombres propios inevitables; explícalos en español natural.
+- Los titulares o fragmentos en otro idioma son solo evidencia: tradúcelos y no los leas literalmente. No locutes hashtags, URLs, emojis ni texto inglés salvo nombres propios inevitables; explícalos en español natural. Excepción: si un término extranjero verificable es la propia historia, puedes locutar únicamente esa palabra en su idioma original y explicar inmediatamente en español qué significa y por qué aparece. Nunca leas un titular extranjero completo.
+- En un término extraño, meme o fenómeno ligero puedes abrir con una reacción humana breve, por ejemplo: «Madre mía, si nadie lo ha entendido, te lo explico». Úsala una sola vez, seguida inmediatamente de la explicación concreta; nunca en sucesos graves, emergencias, violencia, fallecimientos o daño personal.
 - Puedes mencionar Google Trends solo como radar si de verdad ayuda, pero sin convertir el guion en una lista de fuentes.
 - Cita medios solo cuando aporten contexto real y rapido, por ejemplo ABC, MARCA o El Confidencial.
 - Si el briefing trae señales de Reddit o Hacker News, integralas como conversacion natural.
@@ -1130,7 +1131,7 @@ Devuelve SOLO JSON válido con esta forma exacta:
       "id": "block_1",
       "tone": "serious",
       "segments": [
-        { "speaker": "host_a", "text": "..." },
+        { "speaker": "host_a", "text": "...", "language_code": "es" },
         { "speaker": "host_b", "text": "..." }
       ]
     },
@@ -1174,7 +1175,7 @@ function safeParseJsonObject(raw) {
   }
 }
 
-function parseReactionAwareText(text = "", speaker) {
+function parseReactionAwareText(text = "", speaker, languageCode = "es") {
   const chunks = [];
   const source = compactWhitespace(String(text || ""));
   const pattern = /\[([A-Z_]+)\]/g;
@@ -1187,6 +1188,7 @@ function parseReactionAwareText(text = "", speaker) {
         type: "tts",
         speaker,
         text: rawText,
+        languageCode,
       });
     }
 
@@ -1209,6 +1211,7 @@ function parseReactionAwareText(text = "", speaker) {
       type: "tts",
       speaker,
       text: tailText,
+      languageCode,
     });
   }
 
@@ -1224,9 +1227,10 @@ function normalizeModelBlock(block, fallbackId = "block_1") {
           ? speakerB
           : speakerA,
       text: cleanNarrationText(String(item?.text || "")),
+      languageCode: String(item?.language_code || "es").toLowerCase() === "pl" ? "pl" : "es",
     }))
     .filter((item) => item.text)
-    .flatMap((item) => parseReactionAwareText(item.text, item.speaker));
+    .flatMap((item) => parseReactionAwareText(item.text, item.speaker, item.languageCode));
 
   return {
     id: String(block?.id || fallbackId),
@@ -1616,7 +1620,7 @@ async function loadPreparedConversation(filePath, openingClip = null) {
   };
 }
 
-async function ttsToFile({ voiceId, text, outputPath }) {
+async function ttsToFile({ voiceId, text, outputPath, languageCode = "es" }) {
   const apiKey = process.env.VIRALIA_KEY_ELEVENLABS || process.env.ELEVENLABS_API_KEY;
   if (!apiKey) {
     throw new Error("Falta VIRALIA_KEY_ELEVENLABS o ELEVENLABS_API_KEY.");
@@ -1634,7 +1638,7 @@ async function ttsToFile({ voiceId, text, outputPath }) {
     body: JSON.stringify({
       text: ttsText,
       model_id: "eleven_multilingual_v2",
-      language_code: "es",
+      language_code: languageCode === "pl" ? "pl" : "es",
       voice_settings:
         voiceId === speakerA.voiceId
           ? {
@@ -2184,7 +2188,7 @@ export async function generateViraliaEpisode({ mode = "daily", topTrendsOverride
 
       const rawPath = path.join(outDir, `${block.id}-segment-${paddedIndex}.raw.mp3`);
       const voiceId = segment.speaker.label === speakerA.label ? voiceIdA : voiceIdB;
-      await ttsToFile({ voiceId, text: segment.text, outputPath: rawPath });
+      await ttsToFile({ voiceId, text: segment.text, outputPath: rawPath, languageCode: segment.languageCode });
       await vocoliaCleanVoiceSegment(rawPath, outputPath);
       segmentPaths.push(outputPath);
       globalSegmentIndex += 1;

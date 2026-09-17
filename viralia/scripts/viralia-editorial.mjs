@@ -11,6 +11,7 @@ const GOSSIP_OR_MORBO = /\b(reality|cotilleo|novi[oa]|pareja|ruptura|infidelidad
 const AMBIGUOUS = /^(que|como|por que|quien|cuando|donde)\b|\bresultado\b/;
 const GENERIC_RADAR_QUERY = /^(crypto news|bbc weather|weather|news)$/;
 const BETTING_OR_ODDS = /\b(betfair|apuesta|apuestas|cuotas|pronostico|pronósticos|odds)\b/;
+const UNSUPPORTED_FOREIGN_HEADLINE = /[ąćęłńśźż]|\b(the|your|here's|inside|report on|roster|private jet|college football)\b/i;
 const WEATHER_QUERY = /\b(tiempo|aemet|meteorolog|lluvia|temperatura)\b/;
 const WEATHER_STOP_WORDS = new Set(["tiempo", "aemet", "meteorologia", "meteorológico", "meteorologica", "prevision", "previsión", "hoy", "mañana", "espana", "españa"]);
 const SERIOUS_NORMAL = /\b(ley|ayuda|subvencion|aviso|consumo|empleo|transporte|empresa|economia|tecnologia|inteligencia artificial|ciencia)\b/;
@@ -122,6 +123,10 @@ function classifyCandidate(candidate) {
 
   if (BETTING_OR_ODDS.test(text)) {
     return { classification: "DESCARTAR", reason: "Apuestas, cuotas o pronósticos sin valor editorial para el boletín matinal." };
+  }
+
+  if (UNSUPPORTED_FOREIGN_HEADLINE.test((candidate?.newsTitles || []).join(" "))) {
+    return { classification: "DESCARTAR", reason: "Los titulares disponibles están en otro idioma y no aportan contexto español locutable suficiente." };
   }
 
   if (hasWeatherLocationMismatch(candidate, text)) {
@@ -301,7 +306,7 @@ export function selectEditorialStories(candidates = []) {
   if (!selected.length) {
     const guardCandidate = classified.find((item) => {
       const text = candidateText(item);
-      return item.newsTitles?.length && !PERSONAL_HARM.test(text) && !GOSSIP_OR_MORBO.test(text);
+      return item.classification === "NORMAL" && item.newsTitles?.length && !PERSONAL_HARM.test(text) && !GOSSIP_OR_MORBO.test(text);
     });
     if (guardCandidate) {
       selected.push({
