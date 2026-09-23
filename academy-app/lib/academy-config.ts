@@ -3,6 +3,8 @@ export const academyConfig = {
   tagline: "Aprende de profesionales que trabajan cada día creando contenido.",
   siteUrl: process.env.NEXT_PUBLIC_APP_URL ?? "https://academy.localreset.com",
   supportUrl: "https://wa.me/",
+  // Actualiza esta lista cuando se abran nuevas ediciones: se muestra en la portada.
+  upcomingEditions: ["OCTUBRE", "NOVIEMBRE"],
   routes: {
     home: "/",
     dashboard: "/dashboard",
