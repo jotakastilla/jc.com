@@ -22,7 +22,7 @@ export default function Home() {
     <CourseIntro />
     <AccessGuide />
     <MasterclassDetails />
-    <section id="proximas" className="library"><div className="libraryHead"><div><small>PRÓXIMA EDICIÓN · 390 €</small><h2>¿Te vienes a<br /><b>la próxima?</b></h2></div></div><p className="libraryIntro">Estamos cerrando qué día de octubre será la próxima edición. Queda muy poco: apúntate gratis a la lista prioritaria y te avisaremos en cuanto lo confirmemos. Si te encaja, podrás pagar 50 € para reservar tu plaza.</p><TopicRequest /></section>
+    <section id="proximas" className="library upcomingEdition"><div className="editionCopy"><div className="libraryHead"><div><small>PRÓXIMA EDICIÓN · 390 €</small><h2>¿Te vienes a<br /><b>la próxima?</b></h2></div></div><p className="libraryIntro">Estamos cerrando qué día de octubre será la próxima edición. Queda muy poco: apúntate gratis a la lista prioritaria y te avisaremos en cuanto lo confirmemos. Si te encaja, podrás pagar 50 € para reservar tu plaza.</p><TopicRequest /></div><aside className="editionVisual" style={{ backgroundImage: "linear-gradient(135deg, #0b0d12 0%, #0b0d1266 48%, #0b0d1214 100%), url('/images/editions/aula-mezcla.jpg')" }}><small>LOCAL RESET STUDIOS</small><b>Una clase<br />con las manos<br />en la mesa</b><span>10 HORAS · MADRID</span></aside></section>
     <Footer />
   </main>;
 }

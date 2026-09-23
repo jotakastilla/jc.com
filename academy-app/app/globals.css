@@ -2,3 +2,5 @@
 /* Mantiene todos los enlaces del menú y la cuenta en el mismo eje visual. */
 nav > span{align-items:center}
 nav > span > a{display:inline-flex;align-items:center;min-height:30px}
+/* Próxima edición: convierte el espacio lateral en una escena de aula real. */
+.upcomingEdition{display:grid;grid-template-columns:minmax(0,.8fr) minmax(360px,1.2fr);gap:clamp(2rem,6vw,7rem);align-items:stretch}.editionCopy{min-width:0}.editionVisual{position:relative;min-height:430px;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:2rem;border:1px solid #ffffff28;border-radius:18px;background-color:#11151c;background-position:center;background-size:cover}.editionVisual small{color:#f4efe7}.editionVisual b{margin-top:.7rem;font:700 clamp(2rem,4vw,4.2rem)/.93 Sora;color:#fff;letter-spacing:-.07em}.editionVisual span{margin-top:1.2rem;color:#e2d9fa;font-size:.68rem;font-weight:800;letter-spacing:.14em}@media(max-width:800px){.upcomingEdition{grid-template-columns:1fr}.editionVisual{min-height:340px}}
