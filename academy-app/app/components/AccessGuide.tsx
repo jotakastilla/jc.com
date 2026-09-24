@@ -8,5 +8,5 @@ const levels = [
 ];
 
 export function AccessGuide() {
-  return <section className={styles.section} aria-labelledby="access-title"><div className={styles.heading}><small>TRES FORMAS DE ENTRAR</small><h2 id="access-title">Empieza donde<br /><b>estés hoy.</b></h2><p>La parte abierta enseña. Free te acompaña a arrancar. Premium reúne todo lo que necesitas para seguir mejorando.</p></div><div className={styles.levels}>{levels.map((level) => <article key={level.tag}><small>{level.tag}</small><h3>{level.title}</h3><p>{level.copy}</p><Link href={level.href}>{level.action} →</Link></article>)}</div></section>;
+  return <section className={styles.section} aria-labelledby="access-title"><div className={styles.heading}><small>TRES FORMAS DE ENTRAR</small><h2 id="access-title">Empieza donde<br /><b>estés hoy</b></h2><p>La parte abierta enseña. Free te acompaña a arrancar. Premium reúne todo lo que necesitas para seguir mejorando.</p></div><div className={styles.levels}>{levels.map((level) => <article key={level.tag}><small>{level.tag}</small><h3>{level.title}</h3><p>{level.copy}</p><Link href={level.href}>{level.action} →</Link></article>)}</div></section>;
 }
