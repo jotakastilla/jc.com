@@ -9,7 +9,7 @@ type SpotifyExample = { name: string; publisher: string; url: string };
 type Message = { role: "assistant" | "user"; text: string; examples?: SpotifyExample[] };
 
 export function PodcastIdeaValidator() {
-  const [messages, setMessages] = useState<Message[]>([{ role: "assistant", text: "Hola, soy Jony. Cuéntame tu idea de podcast como se la contarías a alguien de confianza. Después vemos si aguanta." }]);
+  const [messages, setMessages] = useState<Message[]>([{ role: "assistant", text: "Hola, soy Jony. ¿Dudas con tu podcast? Cuéntame qué tienes en mente y vemos si aguanta." }]);
   const [draft, setDraft] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");

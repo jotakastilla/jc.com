@@ -47,7 +47,7 @@ export function AudioImprovementDemo() {
   </video>;
 
   return <div className={styles.demo}>
-    <video className={`${styles.video} ${isFading ? styles.fadingOut : ""}`} autoPlay loop muted playsInline preload="metadata" aria-label={`Vídeo ${activeClip + 1} de Local Reset Academy`}>
+    <video className={`${styles.video} ${isFading ? styles.fadingOut : ""}`} autoPlay loop muted playsInline preload="auto" aria-label={`Vídeo ${activeClip + 1} de Local Reset Academy`}>
       <source src={`/video/carrusel/${clips[activeClip]}.mp4`} type="video/mp4" />
     </video>
     {incomingVideo}

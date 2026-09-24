@@ -13,7 +13,8 @@ export const academyConfig = {
     register: "/registro",
   },
   priceIds: {
-    monthly: process.env.STRIPE_ACADEMY_MONTHLY_PRICE_ID ?? "",
-    annual: process.env.STRIPE_ACADEMY_ANNUAL_PRICE_ID ?? "",
+    full: process.env.STRIPE_ACADEMY_FULL_PRICE_ID ?? "price_1UIn4LCkQwL0gBc1kKI8e6JY",
+    reduced: process.env.STRIPE_ACADEMY_REDUCED_PRICE_ID ?? "price_1UIn8CCkQwL0gBc1BYwBkFIi",
+    reservation: process.env.STRIPE_ACADEMY_RESERVATION_PRICE_ID ?? "price_1UIn7HCkQwL0gBc1aXTZTFJG",
   },
 } as const;

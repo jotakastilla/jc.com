@@ -1,0 +1,5 @@
+import Link from "next/link";
+
+export default function LiveSessionsPage() {
+  return <main className="shell"><nav><Link className="brand" href="/">LOCAL RESET <i>ACADEMY</i></Link><span><Link href="/areas">Biblioteca</Link><Link href="/premium">Premium</Link></span></nav><section className="pricing"><small>VIERNES ACADEMY</small><h1>Sesiones para<br /><b>resolver haciendo.</b></h1><p>Aquí anunciaremos los directos de Academy: producción, edición, contenido, vídeo, audio, crecimiento e IA. Cada sesión mostrará su fecha, tema, ponente y acceso cuando esté confirmada.</p><div className="planGrid"><article><small>PRÓXIMO DIRECTO</small><h2>Próximamente</h2><p>Estamos preparando la primera programación. No hay una fecha anunciada todavía.</p><Link className="btn" href="/registro">Crear cuenta gratis →</Link></article><article><small>ARCHIVO PREMIUM</small><h2>En preparación</h2><p>Las grabaciones de las sesiones se irán incorporando al archivo para miembros Premium cuando se publiquen.</p><Link className="btn" href="/premium">Conocer Premium →</Link></article></div></section></main>;
+}

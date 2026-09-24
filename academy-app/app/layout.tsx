@@ -6,10 +6,10 @@ import { academyConfig } from "@/lib/academy-config";
 
 export const metadata: Metadata = {
   metadataBase: new URL(academyConfig.siteUrl),
-  title: { default: "Curso de podcast presencial en Madrid | Local Reset Academy", template: "%s | Local Reset Academy" },
-  description: "Formación presencial de podcast y videopodcast en Madrid. Aprende en un estudio profesional con Jonathan Castilla.",
-  openGraph: { type: "website", locale: "es_ES", siteName: academyConfig.brandName, title: "Curso de podcast presencial en Madrid | Local Reset Academy", description: "10 horas de formación práctica en estudio profesional en Madrid." },
-  twitter: { card: "summary_large_image", title: "Local Reset Academy", description: "Formación presencial de podcast y videopodcast en Madrid." },
+  title: { default: "Local Reset Academy | Formación práctica para podcasters", template: "%s | Local Reset Academy" },
+  description: "Formación práctica, recursos, herramientas y experiencias reales de estudio para crear, producir y hacer crecer tu podcast.",
+  openGraph: { type: "website", locale: "es_ES", siteName: academyConfig.brandName, title: "Local Reset Academy", description: "Formación práctica para crear, producir y hacer crecer tu podcast." },
+  twitter: { card: "summary_large_image", title: "Local Reset Academy", description: "Formación práctica para crear, producir y hacer crecer tu podcast." },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
