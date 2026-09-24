@@ -2,11 +2,11 @@ import Link from "next/link";
 import styles from "./AccessGuide.module.css";
 
 const levels = [
-  { tag: "CONTENIDO ABIERTO", title: "Explora Academy", copy: "Descubre guías, una selección de recursos y cómo trabajamos antes de crear una cuenta.", action: "Explorar contenido abierto", href: "/areas" },
-  { tag: "ACADEMY FREE", title: "Aprende a empezar", copy: "Crea tu perfil para guardar tu avance, acceder a contenido Free y usar las primeras herramientas de Academy.", action: "Crear cuenta gratis", href: "/registro" },
-  { tag: "ACADEMY PREMIUM · 19,90 €/MES", title: "Mejora continuamente", copy: "Biblioteca completa, recursos, herramientas y archivo de sesiones en directo. Próximamente disponible.", action: "Conocer Premium", href: "/premium" },
+  { tag: "MASTERCLASS PRESENCIAL · 390 €", title: "Crea tu podcast en el estudio", copy: "Una masterclass práctica en Local Reset para aprender el proceso completo. Incluye 12 meses de acceso a Academy y sus materiales.", action: "Ver la Masterclass", href: "/premium" },
+  { tag: "ACADEMY · 19,90 €/MES", title: "Sigue creando", copy: "Acceso a directos, biblioteca completa y todos los materiales de Academy. Además, si quieres venir a la Masterclass, pagas 312 € en vez de 390 €.", note: "20 % de descuento para miembros activos. No se acumula con otras tarifas.", action: "Conocer Academy", href: "/premium" },
+  { tag: "ACADEMY FREE · 0 €", title: "Empieza con una muestra", copy: "Algunos vídeos y recursos abiertos para conocer Academy antes de decidir cómo quieres seguir creando.", action: "Ver contenido gratuito", href: "/areas" },
 ];
 
 export function AccessGuide() {
-  return <section className={styles.section} aria-labelledby="access-title"><div className={styles.heading}><small>TRES FORMAS DE ENTRAR</small><h2 id="access-title">Empieza donde<br /><b>estés hoy</b></h2><p>La parte abierta enseña. Free te acompaña a arrancar. Premium reúne todo lo que necesitas para seguir mejorando.</p></div><div className={styles.levels}>{levels.map((level) => <article key={level.tag}><small>{level.tag}</small><h3>{level.title}</h3><p>{level.copy}</p><Link href={level.href}>{level.action} →</Link></article>)}</div></section>;
+  return <section className={styles.section} aria-labelledby="access-title"><div className={styles.heading}><small>TRES FORMAS DE ENTRAR</small><h2 id="access-title">Formas de<br /><b>crear</b></h2><p>Elige una sesión presencial para arrancar en el estudio, acceso mensual para seguir avanzando o una pequeña muestra de contenido abierto.</p></div><div className={styles.levels}>{levels.map((level) => <article key={level.tag}><small>{level.tag}</small><h3>{level.title}</h3><p>{level.copy}</p>{level.note && <span className={styles.note}>{level.note}</span>}<Link href={level.href}>{level.action} →</Link></article>)}</div></section>;
 }

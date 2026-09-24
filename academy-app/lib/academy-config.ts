@@ -16,5 +16,10 @@ export const academyConfig = {
     full: process.env.STRIPE_ACADEMY_FULL_PRICE_ID ?? "price_1UIn4LCkQwL0gBc1kKI8e6JY",
     reduced: process.env.STRIPE_ACADEMY_REDUCED_PRICE_ID ?? "price_1UIn8CCkQwL0gBc1BYwBkFIi",
     reservation: process.env.STRIPE_ACADEMY_RESERVATION_PRICE_ID ?? "price_1UIn7HCkQwL0gBc1aXTZTFJG",
+    membership: {
+      monthly: process.env.STRIPE_ACADEMY_MONTHLY_PRICE_ID ?? "price_1UJALaCkQwL0gBc1lqOf6VP0",
+      annual: process.env.STRIPE_ACADEMY_ANNUAL_PRICE_ID ?? "price_1UJAN1CkQwL0gBc1pRangEjW",
+      quarterly: process.env.STRIPE_ACADEMY_QUARTERLY_PRICE_ID ?? "price_1UJAN1CkQwL0gBc1sG7zG6Zk",
+    },
   },
 } as const;
