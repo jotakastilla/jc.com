@@ -10,7 +10,13 @@ export function generateStaticParams() { return lessons.map(({ slug }) => ({ slu
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const lesson = lessonBySlug((await params).slug);
   if (!lesson) return {};
-  return { title: lesson.title, description: lesson.summary, alternates: { canonical: `/contenidos/${lesson.slug}` }, openGraph: { title: lesson.title, description: lesson.summary, type: "article" } };
+  return {
+    title: lesson.title,
+    description: lesson.summary,
+    alternates: { canonical: `/contenidos/${lesson.slug}` },
+    robots: { index: Boolean(lesson.article), follow: true },
+    openGraph: { title: lesson.title, description: lesson.summary, type: "article" },
+  };
 }
 export default async function ContentPage({ params }: { params: Promise<{ slug: string }> }) {
   const lesson = lessonBySlug((await params).slug);

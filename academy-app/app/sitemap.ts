@@ -1,7 +1,6 @@
 import type { MetadataRoute } from "next";
 import { academyConfig } from "@/lib/academy-config";
-import { lessons } from "@/lib/content";
-import { masterclassModules } from "@/lib/masterclass";
+import { freeArticleSlugs } from "@/lib/content";
 
 const url = (path: string) => new URL(path, academyConfig.siteUrl).toString();
 
@@ -14,7 +13,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: url("/empresas"), lastModified, changeFrequency: "monthly", priority: 0.7 },
     { url: url("/curso-podcast-madrid"), lastModified, changeFrequency: "weekly", priority: 0.95 },
     { url: url("/estudio-podcast-madrid"), lastModified, changeFrequency: "monthly", priority: 0.85 },
-    ...lessons.map((lesson) => ({ url: url(`/contenidos/${lesson.slug}`), lastModified, changeFrequency: "monthly" as const, priority: 0.7 })),
-    ...masterclassModules.map((module) => ({ url: url(`/masterclass/${module.slug}`), lastModified, changeFrequency: "monthly" as const, priority: 0.8 })),
+    // Only submit complete, public guides. Gated lessons and paid masterclass
+    // modules are useful product pages, but are not standalone search content.
+    ...freeArticleSlugs.map((slug) => ({ url: url(`/contenidos/${slug}`), lastModified, changeFrequency: "monthly" as const, priority: 0.7 })),
   ];
 }
